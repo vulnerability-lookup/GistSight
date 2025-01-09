@@ -1,8 +1,10 @@
-import requests
 import re
 import time
-from datetime import datetime, timezone
+from datetime import datetime
+
+import requests  # type: ignore[import-untyped]
 from pyvulnerabilitylookup import PyVulnerabilityLookup
+
 from gistsight import config
 
 # GitHub API URL
@@ -23,9 +25,11 @@ vulnerability_pattern = re.compile(
     re.IGNORECASE,
 )
 
+
 def parse_utc_datetime(date_str):
     """Ensure the input string is parsed into a UTC-aware datetime object."""
     return datetime.fromisoformat(date_str.replace("Z", "+00:00"))
+
 
 def fetch_public_gists():
     headers = {"Authorization": f"Bearer {GITHUB_TOKEN}"}
@@ -80,6 +84,7 @@ def fetch_public_gists():
 
     return found_vulnerabilities
 
+
 def push_sighting_to_vulnerability_lookup(gist_url, timestamp, vulnerability_ids):
     """Create a sighting from an incoming status and push it to the Vulnerability-Lookup instance."""
     print("Pushing sighting to Vulnerability-Lookup…")
@@ -87,9 +92,8 @@ def push_sighting_to_vulnerability_lookup(gist_url, timestamp, vulnerability_ids
         config.vulnerability_lookup_base_url, token=config.vulnerability_auth_token
     )
     for vuln in vulnerability_ids:
-
         # Create the sighting
-        
+
         sighting = {
             "type": "seen",
             "source": gist_url,
@@ -108,11 +112,15 @@ def push_sighting_to_vulnerability_lookup(gist_url, timestamp, vulnerability_ids
                 f"Error when sending POST request to the Vulnerability Lookup server:\n{e}"
             )
 
+
 def main():
     while True:
         gists = fetch_public_gists()
         if gists:
             for gist in gists:
+                if len(gist["vulnerabilities"]) > config.max_bulk_sighting:
+                    # we do not want Gist with plenty of vulnerabilities
+                    continue
                 print(f"Gist: {gist['gist_url']}")
                 print(f"Created At: {gist['created_at'].isoformat()}")
                 print(f"Vulnerabilities: {', '.join(gist['vulnerabilities'])}")
@@ -127,6 +135,7 @@ def main():
         # Wait for 10 seconds before the next execution
         print("Waiting 10 seconds before next run...")
         time.sleep(10)
+
 
 if __name__ == "__main__":
     main()

@@ -26,12 +26,16 @@ finally:
         raise Exception("No configuration file provided.")
 
 try:
-    # For Mastodon
-    github_api_url = conf.github_api_url
-    github_token = conf.github_token
-
     # For PyVulnerabilityLookup
     vulnerability_lookup_base_url = conf.vulnerability_lookup_base_url
     vulnerability_auth_token = conf.vulnerability_auth_token
+
+    github_api_url = conf.github_api_url
+    github_token = conf.github_token
 except AttributeError:
     raise Exception("Missing configuration variable.")
+
+try:
+    max_bulk_sighting = conf.max_bulk_sighting
+except Exception:
+    max_bulk_sighting = 10

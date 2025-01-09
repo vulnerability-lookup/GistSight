@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "GistSight"
-version = "0.1.0"
+version = "0.2.0"
 description = "A client for gathering vulnerability-related information from GitHub Gists."
 authors = ["Cédric Bonhomme <cedric.bonhomme@circl.lu>"]
 license = "GPL-3.0-or-later"
@@ -59,7 +59,7 @@ warn_unreachable = true
 show_error_context = true
 pretty = true
 
-exclude = "build|dist|docs|blueskysight.egg-info"
+exclude = "build|dist|docs|"
 
 [tool.isort]
 profile = "black"
