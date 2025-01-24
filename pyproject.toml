@@ -6,8 +6,8 @@ authors = ["Cédric Bonhomme <cedric.bonhomme@circl.lu>"]
 license = "GPL-3.0-or-later"
 readme = "README.md"
 
-homepage = "https://github.com/CIRCL/GistSight"
-repository = "https://github.com/CIRCL/GistSight"
+homepage = "https://github.com/vulnerability-lookup/GistSight"
+repository = "https://github.com/vulnerability-lookup/GistSight"
 
 keywords = ["Vulnerability-Lookup", "Vulnerability", "CVE", "GitHub", "Gist"]
 

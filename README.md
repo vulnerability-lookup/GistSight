@@ -38,7 +38,7 @@ Waiting 10 seconds before next run...
 
 ## License
 
-[GistSight](https://github.com/CIRCL/GistSight) is licensed under
+[GistSight](https://github.com/vulnerability-lookup/GistSight) is licensed under
 [GNU General Public License version 3](https://www.gnu.org/licenses/gpl-3.0.html)
 
 ~~~
