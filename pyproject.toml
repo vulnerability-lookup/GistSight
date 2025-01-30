@@ -1,16 +1,39 @@
-[tool.poetry]
+[build-system]
+requires = ["poetry-core>=2.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+[project]
 name = "GistSight"
 version = "0.2.0"
 description = "A client for gathering vulnerability-related information from GitHub Gists."
-authors = ["Cédric Bonhomme <cedric.bonhomme@circl.lu>"]
+authors = [
+    {name = "Cédric Bonhomme", email = "cedric.bonhomme@circl.lu"}
+]
 license = "GPL-3.0-or-later"
 readme = "README.md"
-
-homepage = "https://github.com/vulnerability-lookup/GistSight"
-repository = "https://github.com/vulnerability-lookup/GistSight"
-
 keywords = ["Vulnerability-Lookup", "Vulnerability", "CVE", "GitHub", "Gist"]
+# classifieres is dynamic because we want to create Python classifiers automatically
+dynamic = ["classifiers"]
 
+requires-python = "^3.10"
+dependencies = [
+    "pyvulnerabilitylookup (>=2.2.0)",
+    "requests (>=2.32.3)",
+]
+
+
+[project.urls]
+Homepage = "https://github.com/vulnerability-lookup/GistSight"
+Repository = "https://github.com/vulnerability-lookup/GistSight"
+
+
+[project.scripts]
+GistSight = "gistsight.publish:main"
+
+
+[tool.poetry]
+requires-poetry = ">=2.0"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
@@ -21,28 +44,14 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)"
 ]
-
 include = [
     "README.md",
     "COPYING",
     "gistsight/conf_sample.py",
 ]
 
-[tool.poetry.scripts]
-GistSight = "gistsight.publish:main"
-
-[tool.poetry.dependencies]
-python = "^3.10"
-pyvulnerabilitylookup = "^2.2.0"
-requests = "^2.32.3"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
 python_version = "3.13"
@@ -59,7 +68,7 @@ warn_unreachable = true
 show_error_context = true
 pretty = true
 
-exclude = "build|dist|docs|"
+exclude = "build|dist|docs"
 
 [tool.isort]
 profile = "black"
