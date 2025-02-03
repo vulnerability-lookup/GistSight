@@ -133,7 +133,7 @@ def main():
             print("No vulnerabilities found.")
 
         # Wait for 10 seconds before the next execution
-        print("Waiting 10 seconds before next run...")
+        print("Waiting 10 seconds before next run…")
         time.sleep(10)
 
 
