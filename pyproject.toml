@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "GistSight"
-version = "0.2.0"
+version = "1.0.0"
 description = "A client for gathering vulnerability-related information from GitHub Gists."
 authors = [
     {name = "Cédric Bonhomme", email = "cedric.bonhomme@circl.lu"}
@@ -13,19 +13,21 @@ authors = [
 license = "GPL-3.0-or-later"
 readme = "README.md"
 keywords = ["Vulnerability-Lookup", "Vulnerability", "CVE", "GitHub", "Gist"]
-# classifieres is dynamic because we want to create Python classifiers automatically
+
 dynamic = ["classifiers"]
 
 requires-python = ">=3.10,<4.0"
 dependencies = [
     "pyvulnerabilitylookup (>=2.2.0)",
     "requests (>=2.32.3)",
+    "valkey (>=6.1.0,<7.0.0)",
 ]
 
 
 [project.urls]
 Homepage = "https://github.com/vulnerability-lookup/GistSight"
 Repository = "https://github.com/vulnerability-lookup/GistSight"
+Changelog = "https://github.com/vulnerability-lookup/GistSight/blob/main/CHANGELOG.md"
 
 
 [project.scripts]

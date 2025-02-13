@@ -8,3 +8,9 @@ vulnerability_auth_token = ""
 
 # Maximum number of sightings to create from a single Gist
 max_bulk_sighting = 10
+
+# Hearbeat mechanism
+heartbeat_enabled = True
+valkey_host = "127.0.0.1"
+valkey_port = 10002
+expiration_period = 3600
