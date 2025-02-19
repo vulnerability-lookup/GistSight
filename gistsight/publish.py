@@ -6,7 +6,7 @@ import requests  # type: ignore[import-untyped]
 from pyvulnerabilitylookup import PyVulnerabilityLookup
 
 from gistsight import config
-from gistsight.utils import heartbeat, report_error
+from gistsight.monitoring import heartbeat, log
 
 # GitHub API URL
 GITHUB_API_URL = config.github_api_url
@@ -41,7 +41,7 @@ def fetch_public_gists():
         response = requests.get(GITHUB_API_URL, headers=headers, params={"page": page})
         if response.status_code != 200:
             print(f"Error: {response.status_code} - {response.text}")
-            report_error("error", f"Error in fetch_public_gists: {response.status_code}")
+            log("error", f"Error in fetch_public_gists: {response.status_code}")
             break
 
         gists = response.json()
@@ -109,12 +109,18 @@ def push_sighting_to_vulnerability_lookup(gist_url, timestamp, vulnerability_ids
             r = vuln_lookup.create_sighting(sighting=sighting)
             if "message" in r:
                 print(r["message"])
-                report_error("warning", f"push_sighting_to_vulnerability_lookup: {r['message']}")
+                if "duplicate" in r["message"].lower():
+                    level = "info"
+                else:
+                    level = "warning"
+                log(
+                    level, f"push_sighting_to_vulnerability_lookup: {r['message']}"
+                )
         except Exception as e:
             print(
-                f"Error when sending POST request to the Vulnerability Lookup server:\n{e}"
+                f"Error when sending POST request to the Vulnerability-Lookup server:\n{e}"
             )
-            report_error("error", f"Error when sending POST request to the Vulnerability Lookup server: {e}")
+            log("error", f"Error when sending POST request to the Vulnerability-Lookup server: {e}")
 
 
 def main():
@@ -124,6 +130,7 @@ def main():
             for gist in gists:
                 if len(gist["vulnerabilities"]) > config.max_bulk_sighting:
                     # we do not want Gist with plenty of vulnerabilities
+                    log("info", "Skipping Gist with too many vulnerability references.")
                     continue
                 print(f"Gist: {gist['gist_url']}")
                 print(f"Created At: {gist['created_at'].isoformat()}")

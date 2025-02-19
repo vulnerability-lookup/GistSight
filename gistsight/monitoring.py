@@ -23,7 +23,7 @@ def heartbeat(key="process_heartbeat_GistSight") -> None:
         raise  # Propagate the error to stop the process
 
 
-def report_error(
+def log(
     level="warning", message="", key="process_logs_GistSight"
 ) -> None:
     """Reports an error or warning in the Valkey datastore."""
