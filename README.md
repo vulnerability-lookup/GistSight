@@ -15,6 +15,26 @@ $ pipx install GistSight
 $ export GISTSIGHT_CONFIG=~/.gistsight/conf.py
 ```
 
+
+### With Docker
+
+```bash
+git clone https://github.com/vulnerability-lookup/GistSight
+cd GistSight
+
+# Make sure conf.py exists in the project root before running
+docker compose up --build
+```
+
+> [!NOTE]
+> The docker-compose.yml expects a conf.py file in the root directory.
+> You can create it manually or copy the provided example:
+> 
+> ```bash
+> $ cp gistsight/conf_sample.py conf.py
+> ```
+
+
 ### Collecting new Gists
 
 
