@@ -1,5 +1,13 @@
 # Changelog
 
+## Release 1.2.0 (2026-05-05)
+
+The content (file_info["raw_url"]) and description of Gists is now set as the content of the
+sightings.
+
+Updated dependencies.
+
+
 ## Release 1.1.0 (2025-02-13)
 
 Improved monitoring.

@@ -54,9 +54,15 @@ def fetch_public_gists():
 
             # Check vulnerabilities in gist file contents
             matches_in_files = []
+            matched_file_names = []
+            matched_file_contents = []
             for file_info in gist.get("files", {}).values():
                 file_content = requests.get(file_info["raw_url"], headers=headers).text
-                matches_in_files.extend(vulnerability_pattern.findall(file_content))
+                file_matches = vulnerability_pattern.findall(file_content)
+                if file_matches:
+                    matched_file_names.append(file_info["filename"])
+                    matched_file_contents.append(file_content)
+                    matches_in_files.extend(file_matches)
 
             # Combine matches and add to the results if any are found
             all_matches = matches_in_description + matches_in_files
@@ -71,10 +77,8 @@ def fetch_public_gists():
                 found_vulnerabilities.append(
                     {
                         "gist_url": gist["html_url"],
-                        "file_name": [
-                            file_info["filename"]
-                            for file_info in gist.get("files", {}).values()
-                        ],
+                        "file_name": matched_file_names,
+                        "file_content": matched_file_contents,
                         "vulnerabilities": list(
                             set(flattened_matches)
                         ),  # Remove duplicates
@@ -87,9 +91,16 @@ def fetch_public_gists():
     return found_vulnerabilities
 
 
-def push_sighting_to_vulnerability_lookup(gist_url, timestamp, vulnerability_ids):
+def push_sighting_to_vulnerability_lookup(
+    gist_url, timestamp, vulnerability_ids, matched_files_content
+):
     """Create a sighting from an incoming status and push it to the Vulnerability-Lookup instance."""
     print("Pushing sighting to Vulnerability-Lookup…")
+    content = (
+        "\n\n".join(matched_files_content)
+        if isinstance(matched_files_content, list)
+        else str(matched_files_content)
+    )
     vuln_lookup = PyVulnerabilityLookup(
         config.vulnerability_lookup_base_url, token=config.vulnerability_auth_token
     )
@@ -101,6 +112,7 @@ def push_sighting_to_vulnerability_lookup(gist_url, timestamp, vulnerability_ids
             "source": gist_url,
             "vulnerability": vuln,
             "creation_timestamp": timestamp,
+            "content": content,
         }
         print(sighting)
 
@@ -138,7 +150,10 @@ def main():
                 print("-" * 50)
 
                 push_sighting_to_vulnerability_lookup(
-                    gist["gist_url"], gist["created_at"], gist["vulnerabilities"]
+                    gist["gist_url"],
+                    gist["created_at"],
+                    gist["vulnerabilities"],
+                    gist["file_content"],
                 )
         else:
             print("No vulnerabilities found.")
